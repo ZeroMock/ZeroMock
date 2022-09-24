@@ -3,9 +3,26 @@ namespace ZeroMock.Core.Tests;
 [TestFixture]
 public class InstanceFactoryTest
 {
-    class TestClass
+    [Test]
+    public void CanCreateComplexClass()
     {
-        public TestClass(string param1, int param2, int? param3, TestClass param4)
+        // Assert
+        Assert.DoesNotThrow(() => InstanceFactory.CreateNew<InstanceFactoryTestComplexClass>());
+    }
+
+    [Test]
+    public void CanCreateSimpleClass()
+    {
+        // Assert
+        Assert.DoesNotThrow(() => InstanceFactory.CreateNew<InstanceFactoryTestSimpleClass>());
+    }
+
+    /// <summary>
+    /// A class without default constructor
+    /// </summary>
+    class InstanceFactoryTestComplexClass
+    {
+        public InstanceFactoryTestComplexClass(string param1, int param2, int? param3, InstanceFactoryTestComplexClass param4)
         {
             _ = param1;
             _ = param2;
@@ -14,21 +31,10 @@ public class InstanceFactoryTest
         }
     }
 
-    private InstanceFactory _sut;
-
-    [SetUp]
-    public void SetUp()
+    /// <summary>
+    /// A class with default constructor
+    /// </summary>
+    class InstanceFactoryTestSimpleClass
     {
-        _sut = new InstanceFactory();
-    }
-
-    [Test]
-    public void CanCallCreateNew()
-    {
-        // Act
-        var result = _sut.CreateNew<TestClass>();
-
-        // Assert
-        Assert.IsNotNull(result);
     }
 }

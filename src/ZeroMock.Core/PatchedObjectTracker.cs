@@ -2,10 +2,7 @@
 
 namespace ZeroMock.Core;
 
-//private static Harmony _harmony = new Harmony("com.zeromock.patch");
-
-
-internal static class PatchTracker
+internal static class PatchedObjectTracker
 {
     private static readonly ConditionalWeakTable<object, RefId> _ids = new ConditionalWeakTable<object, RefId>();
 
