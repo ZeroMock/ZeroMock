@@ -1,6 +1,6 @@
-using ZeroMock.Core.Tests.Utilities;
+using ZeroMock.Tests.Utilities;
 
-namespace ZeroMock.Core.Tests;
+namespace ZeroMock.Tests;
 
 [TestFixture]
 public class PatcherTest
@@ -10,7 +10,7 @@ public class PatcherTest
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        Patcher.Prepare<PatchMe>();
+        Patcher.SetupHooks<PatchMe>();
     }
 
     [SetUp]
@@ -62,6 +62,14 @@ public class PatcherTest
     }
 
     [Test]
+    public void CanPatchGenericMethodInt()
+    {
+        // Assert
+        Assert.DoesNotThrow(() => _ = _sut.GenericMethod<int>());
+    }
+
+    [Test]
+    [Ignore("Field patching not supported yet")]
     public void CanPatchStringField()
     {
         // Assert

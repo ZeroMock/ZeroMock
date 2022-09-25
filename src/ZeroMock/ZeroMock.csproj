@@ -9,6 +9,7 @@
 	<ItemGroup>
 		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
+		<InternalsVisibleTo Include="ZeroMock.Extensions.Moq" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -17,7 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\ZeroMock.Core\ZeroMock.Core.csproj" />
+		<ProjectReference Include="..\..\src\ZeroMock\ZeroMock.csproj" />
 	</ItemGroup>
 
 </Project>

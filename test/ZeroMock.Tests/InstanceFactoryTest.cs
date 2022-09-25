@@ -1,4 +1,4 @@
-namespace ZeroMock.Core.Tests;
+namespace ZeroMock.Tests;
 
 [TestFixture]
 public class InstanceFactoryTest

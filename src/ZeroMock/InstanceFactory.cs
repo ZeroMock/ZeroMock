@@ -1,4 +1,4 @@
-﻿namespace ZeroMock.Core;
+﻿namespace ZeroMock;
 
 internal static class InstanceFactory
 {

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace ZeroMock.Core;
+namespace ZeroMock;
 
 internal static class BingingFlagsHelper
 {

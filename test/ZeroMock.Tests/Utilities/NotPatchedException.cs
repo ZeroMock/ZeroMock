@@ -1,4 +1,4 @@
-﻿namespace ZeroMock.Core.Tests.Utilities;
+﻿namespace ZeroMock.Tests.Utilities;
 
 public class NotPatchedException : Exception
 {

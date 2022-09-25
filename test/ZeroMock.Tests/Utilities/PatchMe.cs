@@ -1,4 +1,4 @@
-﻿namespace ZeroMock.Core.Tests.Utilities;
+﻿namespace ZeroMock.Tests.Utilities;
 
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable CA1822 // Mark members as static
@@ -21,7 +21,7 @@ class PatchMe
 
     public int? NullableIntMethod() => Throw<int?>();
 
-    //public T GenericMethod<T>() => Throw<T>();
+    public T GenericMethod<T>() => Throw<T>();
 
     //public T GenericClassMethod<T>() where T : class => Throw<T>();
 
