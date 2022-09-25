@@ -29,6 +29,7 @@ class PatchMe
 
     public string StringPropGetOnly { get => Throw<string>(); }
 
+
     public string StringField = "NotPatched";
 
     //[DoesNotReturn]

@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Reflection;
 
 namespace ZeroMock;
 
@@ -14,7 +15,18 @@ public class Mock<T> where T : class
             return new SetupResult<TReturn>(mce.Method, _object);
         }
 
-        throw new InvalidOperationException("Setup only works for methods");
+        if (body is MemberExpression me && me.Member is PropertyInfo pi)
+        {
+            if (pi.SetMethod != null)
+            {
+                Patcher.Patch(pi.SetMethod);
+            }
+
+            Patcher.Patch(pi.GetMethod);
+            return new SetupResult<TReturn>(pi.GetMethod, _object);
+        }
+
+        throw new InvalidOperationException("Setup only works for methods and properties");
     }
 
     public SetupResult Setup(Expression<Action<T>> expression)
