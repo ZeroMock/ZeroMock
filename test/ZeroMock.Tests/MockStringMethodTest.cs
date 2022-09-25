@@ -69,4 +69,32 @@ public class MockStringMethodTest
         Assert.That(result, Is.EqualTo("Success"));
         Assert.True(callbackTriggered);
     }
+
+    [Test]
+    public void CanVerify()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringMethod()).Returns("Success");
+
+        // Act
+        obj.StringMethod();
+
+        // Assert
+        _sut.Verify(e => e.StringMethod(), Times.Once());
+    }
+
+    [Test]
+    public void CanVerifyNever()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringMethod()).Returns("Success");
+
+        // Act
+        obj.StringMethod();
+
+        // Assert
+        Assert.Throws<VerificationException>(() => _sut.Verify(e => e.StringMethod(), Times.Never()));
+    }
 }

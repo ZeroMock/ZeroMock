@@ -17,7 +17,7 @@ public class SetupResult<T>
 
     public SetupResult<T> Returns(Func<T> result)
     {
-        PatchedObjectTracker.AddMethod(_methodInfo, _obj, () => result());
+        PatchedObjectTracker.AddMethod(_methodInfo, _obj, result);
         return this;
     }
 

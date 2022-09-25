@@ -19,6 +19,7 @@ internal static class Patcher
     private static readonly HarmonyMethod _prefixVoidPatch = new HarmonyMethod(_prefixVoidMethodInfo);
     private static readonly HarmonyMethod _prefixReturnPatch = new HarmonyMethod(_prefixReturnMethodInfo);
     internal static readonly Dictionary<MethodInfo, Func<object>> MethodResults = new Dictionary<MethodInfo, Func<object>>();
+    internal static Action<string>? Log;
 
     /// <summary>
     /// Do not execute the original implemenation
@@ -40,7 +41,7 @@ internal static class Patcher
         {
             if (method.IsGenericMethod)
             {
-                Console.WriteLine($"Not patching generic method: {method.DeclaringType.Name}.{method.Name}");
+                Log?.Invoke($"Not patching generic method: {method.DeclaringType.Name}.{method.Name}");
             }
             else
             {
@@ -57,6 +58,7 @@ internal static class Patcher
     {
         try
         {
+            Log?.Invoke($"Patching {original.DeclaringType.Name}.{original.Name}.");
             if (original is MethodInfo mi)
             {
                 if (mi.ReturnType != typeof(void))
@@ -99,7 +101,7 @@ internal static class Patcher
         {
             if (methodResults.MethodOverrides.TryGetValue(__originalMethod, out var result))
             {
-                __result = result();
+                __result = result.Invoke();
             }
 
             methodResults.Callback?.Invoke();
