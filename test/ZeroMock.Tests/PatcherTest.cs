@@ -62,6 +62,7 @@ public class PatcherTest
     }
 
     [Test]
+    [Ignore("Generics must be setup explicitly")]
     public void CanPatchGenericMethodInt()
     {
         // Assert
@@ -69,7 +70,7 @@ public class PatcherTest
     }
 
     [Test]
-    [Ignore("Field patching not supported yet")]
+    [Ignore("Field patching not supported")]
     public void CanPatchStringField()
     {
         // Assert

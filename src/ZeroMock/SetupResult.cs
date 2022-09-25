@@ -27,3 +27,19 @@ public class SetupResult<T>
         return this;
     }
 }
+
+public class SetupResult
+{
+    private readonly object _obj;
+
+    public SetupResult(object obj)
+    {
+        _obj = obj;
+    }
+
+    public SetupResult Callback(Action action)
+    {
+        PatchedObjectTracker.AddCallback(_obj, action);
+        return this;
+    }
+}

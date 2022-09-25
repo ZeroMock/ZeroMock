@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using HarmonyLib;
 
 namespace ZeroMock;
@@ -39,10 +40,7 @@ internal static class Patcher
         {
             if (method.IsGenericMethod)
             {
-                Console.WriteLine("Not patching generic method");
-                //var genMethod = method.MakeGenericMethod(typeof(object));
-                //Patch<T>(genMethod, _prefixPatch);
-
+                Console.WriteLine($"Not patching generic method: {method.DeclaringType.Name}.{method.Name}");
             }
             else
             {
@@ -79,24 +77,20 @@ internal static class Patcher
 #pragma warning disable IDE1006 // Naming Styles
     public static bool VoidPrefix(object __instance)
     {
-        if (PatchedObjectTracker.TryGetObjectMethodResults(__instance, out _))
+        if (PatchedObjectTracker.TryGetObjectMethodResults(__instance, out var methodResults))
         {
+            methodResults.Callback?.Invoke();
+
             return Skip;
         }
 
         if (IsInConstructorOfNewMockObject())
         {
+            PatchedObjectTracker.Track(__instance);
             return Skip;
         }
 
         return !Skip;
-    }
-
-    public static bool IsInConstructorOfNewMockObject()
-    {
-        const string newInstanceHint = $"{nameof(InstanceFactory)}.{nameof(InstanceFactory.CreateNew)}";
-        var stackTrace = Environment.StackTrace;
-        return stackTrace.Contains(newInstanceHint);
     }
 
     public static bool ReturnPrefix(object __instance, MethodBase __originalMethod, ref object __result)
@@ -117,4 +111,12 @@ internal static class Patcher
     }
 
 #pragma warning restore IDE1006 // Naming Styles
+
+    public static bool IsInConstructorOfNewMockObject()
+    {
+        var st = new StackTrace(1, false);
+        return st.GetFrames().Select(e => e.GetMethod())
+            .Where(mi => mi?.Name == nameof(InstanceFactory.CreateNew) && mi.DeclaringType == typeof(InstanceFactory))
+            .Any();
+    }
 }
