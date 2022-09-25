@@ -84,9 +84,7 @@ internal static class Patcher
             return Skip;
         }
 
-        const string newInstanceHint = $"{nameof(InstanceFactory)}.{nameof(InstanceFactory.CreateNew)}";
-        var stackTrace = Environment.StackTrace;
-        if (stackTrace.Contains(newInstanceHint))
+        if (IsInConstructorOfNewMockObject())
         {
             return Skip;
         }
@@ -94,14 +92,23 @@ internal static class Patcher
         return !Skip;
     }
 
+    public static bool IsInConstructorOfNewMockObject()
+    {
+        const string newInstanceHint = $"{nameof(InstanceFactory)}.{nameof(InstanceFactory.CreateNew)}";
+        var stackTrace = Environment.StackTrace;
+        return stackTrace.Contains(newInstanceHint);
+    }
+
     public static bool ReturnPrefix(object __instance, MethodBase __originalMethod, ref object __result)
     {
         if (PatchedObjectTracker.TryGetObjectMethodResults(__instance, out var methodResults))
         {
-            if (methodResults.TryGetValue(__originalMethod, out var result))
+            if (methodResults.MethodOverrides.TryGetValue(__originalMethod, out var result))
             {
                 __result = result();
             }
+
+            methodResults.Callback?.Invoke();
 
             return Skip;
         }

@@ -3,9 +3,15 @@ using System.Runtime.CompilerServices;
 
 namespace ZeroMock;
 
+public class MockOperations
+{
+    public Dictionary<MethodBase, Func<object>> MethodOverrides { get; } = new();
+    public Action? Callback { get; set; }
+}
+
 internal static class PatchedObjectTracker
 {
-    private static readonly ConditionalWeakTable<object, Dictionary<MethodBase, Func<object>>> mockResults = new();
+    private static readonly ConditionalWeakTable<object, MockOperations> mockResults = new();
 
     public static void Track(object obj)
     {
@@ -16,26 +22,26 @@ internal static class PatchedObjectTracker
     {
         if (mockResults.TryGetValue(obj, out var dict))
         {
-            dict[methodInfo] = func;
+            dict.MethodOverrides[methodInfo] = func;
             return;
         }
 
         throw new InvalidOperationException("Object instance not tracked");
     }
 
-    public static bool TryGetObjectMethodResults(object obj, out Dictionary<MethodBase, Func<object>> results)
+    public static void AddCallback(object obj, Action callback)
     {
-        return mockResults.TryGetValue(obj, out results);
-    }
-
-    public static bool TryGetResult(object obj, MethodBase methodBase, out Func<object> result)
-    {
-        if (mockResults.TryGetValue(obj, out var overrides))
+        if (mockResults.TryGetValue(obj, out var dict))
         {
-            return overrides.TryGetValue(methodBase, out result);
+            dict.Callback = callback;
+            return;
         }
 
-        result = null;
-        return false;
+        throw new InvalidOperationException("Object instance not tracked");
+    }
+
+    public static bool TryGetObjectMethodResults(object obj, out MockOperations mockOperations)
+    {
+        return mockResults.TryGetValue(obj, out mockOperations);
     }
 }

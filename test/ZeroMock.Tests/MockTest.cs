@@ -39,5 +39,33 @@ namespace ZeroMock.Tests
             // Assert
             Assert.That(obj.StringMethod(), Is.EqualTo("Success"));
         }
+
+        [Test]
+        public void CanCallCallback()
+        {
+            // Arrange
+            var obj = _sut.Object;
+            var callbackTriggered = false;
+            _sut.Setup(e => e.StringMethod()).Callback(() => callbackTriggered = true);
+
+            // Act
+            obj.StringMethod();
+
+            // Assert
+            Assert.True(callbackTriggered);
+        }
+
+        [Test]
+        public void CanCallGenericReturn()
+        {
+            // Arrange
+            var obj = _sut.Object;
+
+            // Act
+            _sut.Setup(e => e.GenericMethod<int>()).Returns(123);
+
+            // Assert
+            Assert.That(obj.GenericMethod<int>(), Is.EqualTo(123));
+        }
     }
 }
