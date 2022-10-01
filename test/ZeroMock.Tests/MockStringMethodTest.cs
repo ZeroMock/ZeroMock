@@ -85,6 +85,21 @@ public class MockStringMethodTest
     }
 
     [Test]
+    public void CanVerifyTwice()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringMethod()).Returns("Success");
+
+        // Act
+        obj.StringMethod();
+        obj.StringMethod();
+
+        // Assert
+        _sut.Verify(e => e.StringMethod(), Times.Exactly(2));
+    }
+
+    [Test]
     public void CanMatchArgs()
     {
         // Arrange
@@ -96,6 +111,20 @@ public class MockStringMethodTest
 
         // Assert
         Assert.That(result, Is.EqualTo("Success"));
+    }
+
+    [Test]
+    public void CanVerifyArgs()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringArgMethod("Potato")).Returns("Success");
+
+        // Act
+        var result = obj.StringArgMethod("Potato");
+
+        // Assert
+        _sut.Verify(e => e.StringArgMethod("Potato"), Times.Once());
     }
 
     [Test]
