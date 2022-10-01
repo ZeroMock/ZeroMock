@@ -1,19 +1,68 @@
 ﻿namespace ZeroMock;
 
-internal class MethodExecution<T> : IMethodExecution
+internal class ArgumentMatcher
 {
-    public MethodExecution(Func<T> func)
-    {
-        object Invoke()
-        {
-            InvocationAmount++;
-            return func()!;
-        }
+    private readonly List<Condition> _matchers;
 
-        this.Invoke = Invoke;
+    public ArgumentMatcher(List<Condition> matchers)
+    {
+        _matchers = matchers;
     }
 
-    public Func<object> Invoke { get; }
+    public bool Match(object[] args)
+    {
+        if (args.Count() != _matchers.Count)
+        {
+            return false;
+        }
 
-    public int InvocationAmount { get; private set; }
+        if (args.Count() == 0)
+        {
+            return true;
+        }
+
+        for (int i = 0; i < _matchers.Count; i++)
+        {
+            if (!_matchers[i].Match(args[i]))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+internal class SetupResultAccessor<T> : ISetupResultAccessor
+{
+    private readonly SetupResult<T> _setupResult;
+
+    public SetupResultAccessor(SetupResult<T> setupResult)
+    {
+        _setupResult = setupResult;
+    }
+
+    public Func<object>? GetReturnValue => _setupResult.GetReturn;
+
+    public int InvocationAmount => _setupResult.InvocationAmount;
+    public Action? Callback => _setupResult.GetCallback;
+
+    public bool Match(object[] args) => _setupResult.Match(args);
+}
+
+internal class SetupResultAccessor : ISetupResultAccessor
+{
+    private readonly SetupResult _setupResult;
+
+    internal SetupResultAccessor(SetupResult setupResult)
+    {
+        _setupResult = setupResult;
+    }
+
+    public Func<object>? GetReturnValue => null;
+
+    public int InvocationAmount => _setupResult.InvocationAmount;
+    public Action? Callback => _setupResult.GetCallback;
+
+    public bool Match(object[] args) => _setupResult.Match(args);
 }

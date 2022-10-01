@@ -14,8 +14,8 @@ public class PatchFailedException : Exception
 internal static class Patcher
 {
     private static readonly HashSet<Type> _seenTypes = new HashSet<Type>();
-    private static readonly MethodInfo _prefixVoidMethodInfo = typeof(Patcher).GetMethod(nameof(VoidPrefix), BindingFlags.Static | BindingFlags.Public)!;
-    private static readonly MethodInfo _prefixReturnMethodInfo = typeof(Patcher).GetMethod(nameof(ReturnPrefix), BindingFlags.Static | BindingFlags.Public)!;
+    private static readonly MethodInfo _prefixVoidMethodInfo = typeof(Patcher).GetMethod(nameof(ActionHook), BindingFlags.Static | BindingFlags.Public)!;
+    private static readonly MethodInfo _prefixReturnMethodInfo = typeof(Patcher).GetMethod(nameof(FuncHook), BindingFlags.Static | BindingFlags.Public)!;
     private static readonly HarmonyMethod _prefixVoidPatch = new HarmonyMethod(_prefixVoidMethodInfo);
     private static readonly HarmonyMethod _prefixReturnPatch = new HarmonyMethod(_prefixReturnMethodInfo);
     internal static readonly Dictionary<MethodInfo, Func<object>> MethodResults = new Dictionary<MethodInfo, Func<object>>();
@@ -77,35 +77,51 @@ internal static class Patcher
     }
 
 #pragma warning disable IDE1006 // Naming Styles
-    public static bool VoidPrefix(object __instance)
+    public static bool ActionHook(object __instance, MethodBase __originalMethod, object[] __args)
     {
-        if (PatchedObjectTracker.TryGetObjectMethodResults(__instance, out var methodResults))
+        var patchState = PatchedObjectTracker.TryGetObjectMethodResults(__instance, __originalMethod, __args, out var methodResults);
+        if (patchState == PatchState.Setup)
         {
             methodResults.Callback?.Invoke();
 
             return Skip;
         }
 
-        if (IsInConstructorOfNewMockObject())
+        if (patchState == PatchState.NotSetup)
         {
-            PatchedObjectTracker.Track(__instance);
             return Skip;
+        }
+
+        if (patchState == PatchState.NotTracked)
+        {
+            if (IsInConstructorOfNewMockObject())
+            {
+                PatchedObjectTracker.Track(__instance);
+                return Skip;
+            }
         }
 
         return !Skip;
     }
 
-    public static bool ReturnPrefix(object __instance, MethodBase __originalMethod, ref object __result)
+    public static bool FuncHook(object __instance, MethodBase __originalMethod, object[] __args, ref object __result)
     {
-        if (PatchedObjectTracker.TryGetObjectMethodResults(__instance, out var methodResults))
+        var patchState = PatchedObjectTracker.TryGetObjectMethodResults(__instance, __originalMethod, __args, out var methodResults);
+
+        if (patchState == PatchState.Setup)
         {
-            if (methodResults.MethodOverrides.TryGetValue(__originalMethod, out var result))
+            if (methodResults.GetReturnValue != null)
             {
-                __result = result.Invoke();
+                __result = methodResults.GetReturnValue();
             }
 
             methodResults.Callback?.Invoke();
 
+            return Skip;
+        }
+
+        if (patchState == PatchState.NotSetup)
+        {
             return Skip;
         }
 

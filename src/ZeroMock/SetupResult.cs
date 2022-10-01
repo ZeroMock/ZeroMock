@@ -1,45 +1,70 @@
-﻿using System.Reflection;
-
-namespace ZeroMock;
+﻿namespace ZeroMock;
 
 public class SetupResult<T>
 {
-    private readonly MethodInfo _methodInfo;
-    private readonly object _obj;
+    private readonly ArgumentMatcher _condition;
+    internal int InvocationAmount { get; private set; }
+    internal Func<object>? GetReturn { get; private set; }
+    internal Action? GetCallback { get; private set; }
 
-    public SetupResult(MethodInfo methodInfo, object obj)
+    internal SetupResult(ArgumentMatcher condition)
     {
-        _methodInfo = methodInfo;
-        _obj = obj;
+        _condition = condition;
     }
 
     public SetupResult<T> Returns(T result) => Returns(() => result);
 
     public SetupResult<T> Returns(Func<T> result)
     {
-        PatchedObjectTracker.AddMethod(_methodInfo, _obj, result);
+        Func<object> returnFunc = () => result();
+        this.GetReturn = returnFunc;
         return this;
     }
 
     public SetupResult<T> Callback(Action action)
     {
-        PatchedObjectTracker.AddCallback(_obj, action);
+        GetCallback = action;
         return this;
+    }
+
+    public bool Match(object[] args)
+    {
+        if (_condition.Match(args))
+        {
+            InvocationAmount++;
+            return true;
+        }
+
+        return false;
     }
 }
 
 public class SetupResult
 {
-    private readonly object _obj;
+    private readonly ArgumentMatcher _condition;
 
-    public SetupResult(object obj)
+    internal int InvocationAmount { get; private set; }
+    internal Action? GetCallback { get; private set; }
+
+    internal SetupResult(ArgumentMatcher condition)
     {
-        _obj = obj;
+        _condition = condition;
     }
 
     public SetupResult Callback(Action action)
     {
-        PatchedObjectTracker.AddCallback(_obj, action);
+        GetCallback = action;
         return this;
+    }
+
+    public bool Match(object[] args)
+    {
+        if (_condition.Match(args))
+        {
+            InvocationAmount++;
+            return true;
+        }
+
+        return false;
     }
 }

@@ -36,7 +36,7 @@ public class MockPropertyTest
         _sut.Setup(e => e.StringProp).Returns("Success");
 
         // Assert
-        Assert.AreEqual(obj.StringProp, "Success");
+        Assert.AreEqual("Success", obj.StringProp);
     }
 
     [Test]

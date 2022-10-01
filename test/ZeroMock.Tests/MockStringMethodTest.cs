@@ -85,6 +85,34 @@ public class MockStringMethodTest
     }
 
     [Test]
+    public void CanMatchArgs()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringArgMethod(It.Is<string>(e => e.Contains("Potato")))).Returns("Success");
+
+        // Act
+        var result = obj.StringArgMethod("Potato");
+
+        // Assert
+        Assert.That(result, Is.EqualTo("Success"));
+    }
+
+    [Test]
+    public void CanNotMatchArgs()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringArgMethod(It.Is<string>(e => e.Contains("Potato")))).Returns("Success");
+
+        // Act
+        var result = obj.StringArgMethod("PineApple");
+
+        // Assert
+        Assert.That(result, Is.Not.EqualTo("Success"));
+    }
+
+    [Test]
     public void CanVerifyNever()
     {
         // Arrange
