@@ -2,6 +2,9 @@
 
 namespace ZeroMock;
 
+/// <summary>
+/// The parameter condition passed as argument during setup
+/// </summary>
 internal class Condition
 {
     private readonly dynamic _func;

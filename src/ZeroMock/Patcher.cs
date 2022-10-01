@@ -4,13 +4,9 @@ using HarmonyLib;
 
 namespace ZeroMock;
 
-public class PatchFailedException : Exception
-{
-    public PatchFailedException(string message, Exception e) : base(message, e)
-    {
-    }
-}
-
+/// <summary>
+/// Harmony2 wrapper to inject hooks into function calls
+/// </summary>
 internal static class Patcher
 {
     private static readonly HashSet<Type> _seenTypes = new HashSet<Type>();
@@ -19,7 +15,6 @@ internal static class Patcher
     private static readonly HarmonyMethod _prefixVoidPatch = new HarmonyMethod(_prefixVoidMethodInfo);
     private static readonly HarmonyMethod _prefixReturnPatch = new HarmonyMethod(_prefixReturnMethodInfo);
     internal static readonly Dictionary<MethodInfo, Func<object>> MethodResults = new Dictionary<MethodInfo, Func<object>>();
-    internal static Action<string>? Log;
 
     /// <summary>
     /// Do not execute the original implemenation
@@ -27,6 +22,9 @@ internal static class Patcher
     const bool Skip = false;
     private static readonly Harmony _harmony = new Harmony("com.ZermMock.patch");
 
+    /// <summary>
+    /// Hook all non generic functions/properties/ctor to return default value and skip original implementation
+    /// </summary>
     public static void SetupHooks<T>() where T : class
     {
         if (_seenTypes.Contains(typeof(T)))
@@ -39,13 +37,10 @@ internal static class Patcher
 
         foreach (var method in methods)
         {
-            if (method.IsGenericMethod)
-            {
-                Log?.Invoke($"Not patching generic method: {method.DeclaringType.Name}.{method.Name}");
-            }
-            else
+            if (!method.IsGenericMethod)
             {
                 Patch(method);
+
             }
         }
 
@@ -54,11 +49,15 @@ internal static class Patcher
         _seenTypes.Add(typeof(T));
     }
 
+    /// <summary>
+    /// Inject hook to return default value and skip original implementation
+    /// </summary>
+    /// <param name="original"></param>
+    /// <exception cref="PatchFailedException"></exception>
     public static void Patch(MethodBase original)
     {
         try
         {
-            Log?.Invoke($"Patching {original.DeclaringType.Name}.{original.Name}.");
             if (original is MethodInfo mi)
             {
                 if (mi.ReturnType != typeof(void))
@@ -130,7 +129,10 @@ internal static class Patcher
 
 #pragma warning restore IDE1006 // Naming Styles
 
-    public static bool IsInConstructorOfNewMockObject()
+    /// <summary>
+    /// Check if we are in the callstack of InstanceFactory.CreateNew
+    /// </summary>
+    private static bool IsInConstructorOfNewMockObject()
     {
         var st = new StackTrace(1, false);
         return st.GetFrames().Select(e => e.GetMethod())

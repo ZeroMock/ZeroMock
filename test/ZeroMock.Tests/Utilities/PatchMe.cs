@@ -15,6 +15,8 @@ class PatchMe
 
     public void VoidMethod() => Throw();
 
+    public void VoidArgMethod(string param) => Throw();
+
     public string StringMethod() => Throw<string>();
     public string StringArgMethod(string arg) => Throw<string>();
 

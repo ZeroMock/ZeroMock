@@ -17,7 +17,7 @@ var result = obj.Example("Helloooo");
 mock.Verify(e => e.Example("Hello"), Times.Once()
 ```
 
-This project is in alpha stage, many other `moq` methods are not implemented.
+This project is in pre-alpha stage, and probably very unstable.
 
 This project cannot mock interfaces, it is recommended to use in combination with `moq` to combine feature sets.
 
@@ -28,7 +28,7 @@ This project cannot mock interfaces, it is recommended to use in combination wit
 - Mocking a concrete class will make all non-generic functions and properties return `default`.
 - Fields are uneffected.
 - ⚠️ Generics must be setup manually. If not, it will call the concrete behaviour.
-- ⚠️ Methods that have been inlined by the JIT 
+- ⚠️ Methods that have been inlined by the JIT cannot be mocked and currently will throw exception during mocking.
 
 ---
 
