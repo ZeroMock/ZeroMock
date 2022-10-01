@@ -212,13 +212,13 @@ dotnet_naming_symbols.private_field_symbols.applicable_accessibilities = private
 
 # Interfaces
 dotnet_naming_rule.interfaces_must_be_pascal_cased_and_prefixed_with_I.symbols = interface_symbols
-dotnet_naming_rule.interfaces_must_be_pascal_cased_and_prefixed_with_I.style = pascal_case_and_prefix_with_I_style
-dotnet_naming_rule.interfaces_must_be_pascal_cased_and_prefixed_with_I.severity = warning
+dotnet_naming_rule.interfaces_must_be_pascal_cased_and_prefixed_with_i.style = pascal_case_and_prefix_with_I_style
+dotnet_naming_rule.interfaces_must_be_pascal_cased_and_prefixed_with_i.severity = warning
 
 # Type parameters
 dotnet_naming_rule.type_parameters_must_be_pascal_cased_and_prefixed_with_T.symbols = type_parameter_symbols
-dotnet_naming_rule.type_parameters_must_be_pascal_cased_and_prefixed_with_T.style = pascal_case_and_prefix_with_T_style
-dotnet_naming_rule.type_parameters_must_be_pascal_cased_and_prefixed_with_T.severity = warning
+dotnet_naming_rule.type_parameters_must_be_pascal_cased_and_prefixed_with_t.style = pascal_case_and_prefix_with_T_style
+dotnet_naming_rule.type_parameters_must_be_pascal_cased_and_prefixed_with_t.severity = warning
 
 # Pascal most of the things
 dotnet_naming_rule.externally_visible_members_must_be_pascal_cased.symbols = pascal_symbols
@@ -285,6 +285,11 @@ dotnet_diagnostic.IDE2003.severity = warning
 
 # csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental
 dotnet_diagnostic.IDE2004.severity = warning
+csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_style_prefer_method_group_conversion = true:silent
+csharp_style_prefer_top_level_statements = true:silent
+csharp_style_prefer_null_check_over_type_check = true:suggestion
+csharp_style_prefer_local_over_anonymous_function = true:suggestion
 
 [*.{xml,xsd}]
 max_line_length = off
@@ -294,3 +299,23 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 indent_size = 2
+[*.{cs,vb}]
+dotnet_style_operator_placement_when_wrapping = beginning_of_line
+tab_width = 4
+indent_size = 4
+end_of_line = crlf
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_auto_properties = true:silent
+dotnet_style_object_initializer = true:silent
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:silent
+dotnet_style_prefer_conditional_expression_over_return = true:silent
+dotnet_style_explicit_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_compound_assignment = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:silent
+dotnet_style_namespace_match_folder = true:suggestion

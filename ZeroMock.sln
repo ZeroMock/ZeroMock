@@ -3,14 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.32804.182
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeroMock.Core", "src\ZeroMock.Core\ZeroMock.Core.csproj", "{E7F31FE5-6DD4-4517-AF9A-D2D990A20D7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeroMock", "src\ZeroMock\ZeroMock.csproj", "{E7F31FE5-6DD4-4517-AF9A-D2D990A20D7A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeroMock.Core.Tests", "test\ZeroMock.Core.Tests\ZeroMock.Core.Tests.csproj", "{40D49223-B34A-40F3-85BF-E27E574D74B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeroMock.Tests", "test\ZeroMock.Tests\ZeroMock.Tests.csproj", "{40D49223-B34A-40F3-85BF-E27E574D74B6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DB5CC0E4-C00E-41A3-ABD7-126499791E7A}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.unitTestGeneratorConfig = .unitTestGeneratorConfig
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DCA11545-E512-4BC9-9A05-6B761035BE31}"
