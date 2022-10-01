@@ -27,6 +27,38 @@ public class MockVoidMethodTest
     }
 
     [Test]
+    public void CanSetupArgs()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        int callbackCalled = 0;
+        _sut.Setup(e => e.VoidArgMethod(It.Is<string>(e => e.Contains("Hello")))).Callback(() => callbackCalled++);
+
+        // Act
+        _sut.Object.VoidArgMethod("Hello");
+        _sut.Object.VoidArgMethod("GoodBye");
+
+        // Assert
+        Assert.That(callbackCalled, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void CanSetupArgsConstant()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        int callbackCalled = 0;
+        _sut.Setup(e => e.VoidArgMethod("Hello")).Callback(() => callbackCalled++);
+
+        // Act
+        _sut.Object.VoidArgMethod("Hello");
+        _sut.Object.VoidArgMethod("GoodBye");
+
+        // Assert
+        Assert.That(callbackCalled, Is.EqualTo(1));
+    }
+
+    [Test]
     public void CanCallback()
     {
         // Arrange
