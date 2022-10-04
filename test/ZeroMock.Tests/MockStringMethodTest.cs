@@ -114,6 +114,20 @@ public class MockStringMethodTest
     }
 
     [Test]
+    public void CanMatchArgsInReturn()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringArgMethod(It.Is<string>(e => e.Contains("Potato")))).Returns((string param1) => param1);
+
+        // Act
+        var result = obj.StringArgMethod("Potatoooo");
+
+        // Assert
+        Assert.That(result, Is.EqualTo("Potatoooo"));
+    }
+
+    [Test]
     public void CanVerifyArgs()
     {
         // Arrange

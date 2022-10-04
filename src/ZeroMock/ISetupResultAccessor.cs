@@ -10,7 +10,7 @@ internal interface ISetupResultAccessor
     /// <summary>
     /// If the user setup a return
     /// </summary>
-    Func<object>? GetReturnValue { get; }
+    Func<dynamic[], dynamic>? GetReturnValue { get; }
 
     /// <summary>
     /// If the user setup a callback
