@@ -111,7 +111,7 @@ internal static class Patcher
         {
             if (methodResults.GetReturnValue != null)
             {
-                __result = methodResults.GetReturnValue();
+                __result = methodResults.GetReturnValue(__args);
             }
 
             methodResults.Callback?.Invoke();
