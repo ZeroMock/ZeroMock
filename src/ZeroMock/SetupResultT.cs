@@ -5,7 +5,7 @@ public class SetupResult<T>
     private readonly ArgumentMatcher _condition;
     internal int InvocationAmount { get; private set; }
     internal Func<dynamic[], dynamic>? GetReturn { get; private set; }
-    internal Action? GetCallback { get; private set; }
+    internal Action<dynamic[]>? GetCallback { get; private set; }
 
     internal SetupResult(ArgumentMatcher condition)
     {
@@ -18,7 +18,6 @@ public class SetupResult<T>
         this.GetReturn = returnFunc;
         return this;
     }
-
 
     public SetupResult<T> Returns<T1>(Func<T1, T> result)
     {
@@ -94,14 +93,20 @@ public class SetupResult<T>
 
     public SetupResult<T> Returns(Func<T> result)
     {
-        Func<object[], dynamic> returnFunc = (_) => result()!;
+        Func<object[], dynamic> returnFunc = _ => result()!;
         this.GetReturn = returnFunc;
         return this;
     }
 
     public SetupResult<T> Callback(Action action)
     {
-        GetCallback = action;
+        GetCallback = _ => action();
+        return this;
+    }
+
+    public SetupResult<T> Callback(Delegate action)
+    {
+        GetCallback = (args) => action.Method.Invoke(action.Target, args);
         return this;
     }
 

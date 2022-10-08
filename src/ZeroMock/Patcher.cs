@@ -81,7 +81,7 @@ internal static class Patcher
         var patchState = PatchedObjectTracker.TryGetObjectMethodResults(__instance, __originalMethod, __args, out var methodResults);
         if (patchState == PatchState.Setup)
         {
-            methodResults.Callback?.Invoke();
+            methodResults.Callback?.Invoke(__args);
 
             return Skip;
         }
@@ -114,7 +114,7 @@ internal static class Patcher
                 __result = methodResults.GetReturnValue(__args);
             }
 
-            methodResults.Callback?.Invoke();
+            methodResults.Callback?.Invoke(__args);
 
             return Skip;
         }

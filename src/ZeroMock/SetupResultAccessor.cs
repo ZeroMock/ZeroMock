@@ -12,7 +12,7 @@ internal class SetupResultAccessor : ISetupResultAccessor
     public Func<dynamic[], dynamic>? GetReturnValue => null;
 
     public int InvocationAmount => _setupResult.InvocationAmount;
-    public Action? Callback => _setupResult.GetCallback;
+    public Action<dynamic[]>? Callback => _setupResult.GetCallback;
 
     public bool Match(object[] args) => _setupResult.Match(args);
 }
