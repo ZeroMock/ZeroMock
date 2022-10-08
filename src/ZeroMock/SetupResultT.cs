@@ -12,6 +12,14 @@ public class SetupResult<T>
         _condition = condition;
     }
 
+    public SetupResult<T> Returns(Delegate result)
+    {
+        Func<dynamic[], dynamic> returnFunc = (args) => result.Method.Invoke(result.Target, args);
+        this.GetReturn = returnFunc;
+        return this;
+    }
+
+
     public SetupResult<T> Returns<T1>(Func<T1, T> result)
     {
         Func<dynamic[], dynamic> returnFunc = (args) => result(args[0]);

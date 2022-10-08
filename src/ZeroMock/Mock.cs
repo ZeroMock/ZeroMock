@@ -115,6 +115,12 @@ public class Mock<T> where T : class
                 var match = new Condition(ce);
                 conditions.Add(match);
             }
+            else if (arg is MemberExpression me && me.Member.DeclaringType?.Namespace == "ZeroMock" && me.Member.Name == "IsAny")
+            {
+                Func<dynamic, bool> any = (dynamic _) => true;
+                var match = new Condition(any);
+                conditions.Add(match);
+            }
             else
             {
                 throw new NotImplementedException($"Unhandled path for {arg.GetType()}");
