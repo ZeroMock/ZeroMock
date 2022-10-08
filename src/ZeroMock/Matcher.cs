@@ -20,6 +20,11 @@ internal class Condition
         _func = func;
     }
 
+    public Condition(dynamic func)
+    {
+        _func = func;
+    }
+
     public bool Match(dynamic input)
     {
         return (bool)_func.Invoke(input);
