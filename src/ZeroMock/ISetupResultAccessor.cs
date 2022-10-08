@@ -15,7 +15,7 @@ internal interface ISetupResultAccessor
     /// <summary>
     /// If the user setup a callback
     /// </summary>
-    public Action? Callback { get; }
+    public Action<dynamic[]>? Callback { get; }
 
     /// <summary>
     /// If this setup arguments match the passed arguments
