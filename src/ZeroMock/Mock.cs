@@ -44,6 +44,28 @@ public class Mock<T> where T : class
     }
 
     /// <summary>
+    /// Check if a method was called matching the condition
+    /// </summary>
+    public void Verify(Expression<Action<T>> expression, Times? times = null)
+    {
+        times ??= Times.AtLeastOnce();
+
+        var body = expression.Body;
+
+        if (body is MethodCallExpression mce)
+        {
+            var conditions = GetMethodCallExpressionArguments(mce);
+            var count = PatchedObjectTracker.GetInvocationCount(_object, mce.Method, new ArgumentMatcher(conditions));
+            conditions.AddRange(GetMethodCallExpressionArguments(mce));
+
+            if (!times.Test(count))
+            {
+                throw new VerificationException($"Method {typeof(T)}.{mce.Method.Name} was called {count}, but expected {times}");
+            }
+        }
+    }
+
+    /// <summary>
     /// Setup a method matching the condition
     /// </summary>
     public SetupResult<TReturn> Setup<TReturn>(Expression<Func<T, TReturn>> expression)
@@ -104,6 +126,13 @@ public class Mock<T> where T : class
         {
             if (arg is MethodCallExpression argMce)
             {
+                if (argMce.Method.DeclaringType?.Namespace == "ZeroMock" && argMce.Method.Name == "IsAny")
+                {
+                    Func<dynamic, bool> any = (dynamic _) => true;
+                    var match = new Condition(any);
+                    conditions.Add(match);
+                }
+                else
                 if (argMce.Arguments[0] is UnaryExpression ue)
                 {
                     var match = new Condition(ue);
