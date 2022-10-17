@@ -1,16 +1,27 @@
-using T = ZeroMock.Tests.Utilities.PatchMe;
+using ZeroMock.Tests.Utilities;
 
 namespace ZeroMock.Tests;
 
 [TestFixture]
 public class MockPropertyTest
 {
-    private Mock<T> _sut;
+    private Mock<TestClass> _sut;
 
     [SetUp]
     public void SetUp()
     {
-        _sut = new Mock<T>();
+        _sut = new Mock<TestClass>();
+    }
+
+    [Test, Order(0)]
+    public void NotSetup_PropertyIsDefault()
+    {
+        // Arrange
+        var obj = _sut.Object;
+
+        // Assert
+
+        Assert.AreEqual(GetDefault<string>(), obj.Target);
     }
 
     [Test]
@@ -20,10 +31,10 @@ public class MockPropertyTest
         var obj = _sut.Object;
 
         // Act
-        _sut.Setup(e => e.StringProp);
+        _sut.Setup(e => e.Target);
 
         // Assert
-        Assert.DoesNotThrow(() => _ = obj.StringProp);
+        Assert.DoesNotThrow(() => _ = obj.Target);
     }
 
     [Test]
@@ -33,10 +44,10 @@ public class MockPropertyTest
         var obj = _sut.Object;
 
         // Act
-        _sut.Setup(e => e.StringProp).Returns("Success");
+        _sut.Setup(e => e.Target).Returns("Success");
 
         // Assert
-        Assert.AreEqual("Success", obj.StringProp);
+        Assert.That(obj.Target, Is.EqualTo("Success"));
     }
 
     [Test]
@@ -45,12 +56,19 @@ public class MockPropertyTest
         // Arrange
         var obj = _sut.Object;
         var callbackTriggered = false;
-        _sut.Setup(e => e.StringProp).Callback(() => callbackTriggered = true);
+        _sut.Setup(e => e.Target).Callback(() => callbackTriggered = true);
 
         // Act
-        _ = obj.StringProp;
+        _ = obj.Target;
 
         // Assert
-        Assert.True(callbackTriggered);
+        Assert.That(callbackTriggered);
+    }
+
+    private T GetDefault<T>() => default!;
+
+    private class TestClass
+    {
+        public string Target { get => PreventInline.Throw<string>(); set => PreventInline.Throw<string>(); }
     }
 }

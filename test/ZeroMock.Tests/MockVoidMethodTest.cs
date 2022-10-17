@@ -1,20 +1,20 @@
-using T = ZeroMock.Tests.Utilities.PatchMe;
+using ZeroMock.Tests.Utilities;
 
 namespace ZeroMock.Tests;
 
 [TestFixture]
 public class MockVoidMethodTest
 {
-    private Mock<T> _sut;
+    private Mock<TestClass> _sut;
 
     [SetUp]
     public void SetUp()
     {
-        _sut = new Mock<T>();
+        _sut = new Mock<TestClass>();
     }
 
     [Test]
-    public void CanSetup()
+    public void CanVerify()
     {
         // Arrange
         var obj = _sut.Object;
@@ -24,38 +24,7 @@ public class MockVoidMethodTest
 
         // Assert
         Assert.DoesNotThrow(() => obj.VoidMethod());
-    }
-
-    [Test]
-    public void CanSetupArgs()
-    {
-        // Arrange
-        var obj = _sut.Object;
-        int callbackCalled = 0;
-        _sut.Setup(e => e.VoidArgMethod(It.Is<string>(e => e.Contains("Hello")))).Callback(() => callbackCalled++);
-
-        // Act
-        _sut.Object.VoidArgMethod("Hello");
-        _sut.Object.VoidArgMethod("GoodBye");
-
-        // Assert
-        Assert.That(callbackCalled, Is.EqualTo(1));
-    }
-
-    [Test]
-    public void CanSetupArgsConstant()
-    {
-        // Arrange
-        var obj = _sut.Object;
-        int callbackCalled = 0;
-        _sut.Setup(e => e.VoidArgMethod("Hello")).Callback(() => callbackCalled++);
-
-        // Act
-        _sut.Object.VoidArgMethod("Hello");
-        _sut.Object.VoidArgMethod("GoodBye");
-
-        // Assert
-        Assert.That(callbackCalled, Is.EqualTo(1));
+        _sut.Verify(e => e.VoidMethod(), Times.Once());
     }
 
     [Test]
@@ -71,5 +40,10 @@ public class MockVoidMethodTest
 
         // Assert
         Assert.True(callbackTriggered);
+    }
+
+    private class TestClass
+    {
+        public void VoidMethod() => PreventInline.Throw();
     }
 }

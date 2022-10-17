@@ -20,7 +20,7 @@ public class InstanceFactoryTest
     /// <summary>
     /// A class without default constructor
     /// </summary>
-    class InstanceFactoryTestComplexClass
+    private class InstanceFactoryTestComplexClass
     {
         public InstanceFactoryTestComplexClass(string param1, int param2, int? param3, InstanceFactoryTestComplexClass param4)
         {
@@ -34,7 +34,7 @@ public class InstanceFactoryTest
     /// <summary>
     /// A class with default constructor
     /// </summary>
-    class InstanceFactoryTestSimpleClass
+    private class InstanceFactoryTestSimpleClass
     {
     }
 }

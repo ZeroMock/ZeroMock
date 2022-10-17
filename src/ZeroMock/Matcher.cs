@@ -10,7 +10,7 @@ internal class Condition
     private readonly dynamic _func;
     public Condition(UnaryExpression ue)
     {
-        var operand = (LambdaExpression)ue.Operand;
+        var operand = (dynamic)ue.Operand;
         _func = operand.Compile();
     }
 
@@ -27,6 +27,7 @@ internal class Condition
 
     public bool Match(dynamic input)
     {
-        return (bool)_func.Invoke(input);
+        var result = (bool)_func.Invoke(input);
+        return result;
     }
 }
