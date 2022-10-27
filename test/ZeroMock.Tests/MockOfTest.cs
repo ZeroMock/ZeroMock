@@ -14,6 +14,29 @@ public static class MockOfTest
         Assert.That(result, Is.SameAs(mock.Object));
     }
 
+    [Test]
+    public static void CanSetProperty()
+    {
+        // Act
+        var result = Mock.Of<TestClass>();
+        result.Test = "Test";
+
+        // Assert
+        Assert.That(result.Test, Is.EqualTo("Test"));
+    }
+
+    [Test]
+    public static void CanSetPropertyInCtor()
+    {
+        // Act
+        var result = Mock.Of<TestClass>(e => e.Test == "Test");
+
+        // Assert
+        Assert.That(result.Test, Is.EqualTo("Test"));
+    }
+
     private class TestClass
-    { }
+    {
+        public string Test { get; set; }
+    }
 }

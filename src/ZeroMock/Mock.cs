@@ -10,12 +10,24 @@ namespace ZeroMock;
 /// </summary>
 public class Mock<T> where T : class
 {
+    private HashSet<MethodInfo> _setupProperties = new();
+
     public Mock()
     {
         if (!IsConcreteType(typeof(T)))
         {
             throw new InvalidOperationException($"ZeroMock can only be used with concrete classes. Cannot mock {typeof(T).Name}");
         }
+    }
+
+    public void SetupAllProperties()
+    {
+        var methods = typeof(T).GetMethods(BingingFlagsHelper.InstanceAll | BindingFlags.DeclaredOnly);
+        foreach (var method in methods)
+        {
+            _setupProperties.Add(method);
+        }
+
     }
 
     private static bool IsConcreteType(Type type)
