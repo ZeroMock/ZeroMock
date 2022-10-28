@@ -3,8 +3,6 @@ using System.Reflection;
 
 namespace ZeroMock;
 
-
-
 /// <summary>
 /// Mock a concrete class
 /// </summary>

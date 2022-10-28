@@ -1,3 +1,5 @@
+using ZeroMock.Tests.Utilities;
+
 namespace ZeroMock.Tests;
 
 [TestFixture]
@@ -19,24 +21,59 @@ public static class MockOfTest
     {
         // Act
         var result = Mock.Of<TestClass>();
-        result.Test = "Test";
+        result.SomeProperty = "Test";
 
         // Assert
-        Assert.That(result.Test, Is.EqualTo("Test"));
+        Assert.That(result.SomeProperty, Is.EqualTo("Test"));
     }
 
     [Test]
     public static void CanSetPropertyInCtor()
     {
         // Act
-        var result = Mock.Of<TestClass>(e => e.Test == "Test");
+        var result = Mock.Of<TestClass>(e => e.SomeProperty == "Test");
 
         // Assert
-        Assert.That(result.Test, Is.EqualTo("Test"));
+        Assert.That(result.SomeProperty, Is.EqualTo("Test"));
+    }
+
+
+    [Test]
+    public static void CanSetMethodInCtor()
+    {
+        // Act
+        var result = Mock.Of<TestClass>(e => e.SomeMethod() == "Test");
+
+        // Assert
+        Assert.That(result.SomeMethod(), Is.EqualTo("Test"));
+    }
+
+    [Test]
+    public static void CanSetMethodAndPropertyInCtor()
+    {
+        // Act
+        var result = Mock.Of<TestClass>(e => e.SomeProperty == "Test" && e.SomeMethod() == "Test");
+
+        // Assert
+        Assert.That(result.SomeProperty, Is.EqualTo("Test"));
+        Assert.That(result.SomeMethod(), Is.EqualTo("Test"));
+    }
+
+    [Test]
+    public static void CanSetMethodAndPropertyAndPropertyAgainInCtor()
+    {
+        // Act
+        var result = Mock.Of<TestClass>(e => e.SomeProperty == "Bad" && e.SomeMethod() == "Test" && e.SomeProperty == "Test");
+
+        // Assert
+        Assert.That(result.SomeProperty, Is.EqualTo("Test"));
+        Assert.That(result.SomeMethod(), Is.EqualTo("Test"));
     }
 
     private class TestClass
     {
-        public string Test { get; set; }
+        public string SomeProperty { get; set; }
+
+        public string SomeMethod() => PreventInline.Throw<string>();
     }
 }

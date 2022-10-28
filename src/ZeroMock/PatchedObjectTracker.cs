@@ -78,8 +78,7 @@ internal static class PatchedObjectTracker
             {
                 setupRegistration.Invocation.Add(args);
 
-                // TODO Should this be last or default?
-                var match = setupRegistration.Setups.FirstOrDefault(e => e.Match(args));
+                var match = setupRegistration.Setups.LastOrDefault(e => e.Match(args));
                 if (match != null)
                 {
                     setupResult = match;
