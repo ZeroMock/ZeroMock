@@ -6,6 +6,7 @@ public class SetupResult
 
     internal int InvocationAmount { get; private set; }
     internal Action<dynamic[]>? GetCallback { get; private set; }
+    internal Func<dynamic[], dynamic>? GetReturn { get; private set; }
 
     internal SetupResult(ArgumentMatcher condition)
     {
@@ -21,6 +22,13 @@ public class SetupResult
     public SetupResult Callback(Delegate action)
     {
         GetCallback = (args) => action.Method.Invoke(action.Target, args);
+        return this;
+    }
+
+    internal SetupResult Returns(dynamic result)
+    {
+        Func<dynamic[], dynamic> returnFunc = (args) => result;
+        this.GetReturn = returnFunc;
         return this;
     }
 

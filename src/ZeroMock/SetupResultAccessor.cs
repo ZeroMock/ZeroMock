@@ -9,7 +9,7 @@ internal class SetupResultAccessor : ISetupResultAccessor
         _setupResult = setupResult;
     }
 
-    public Func<dynamic[], dynamic>? GetReturnValue => null;
+    public Func<dynamic[], dynamic>? GetReturnValue => _setupResult.GetReturn;
 
     public int InvocationAmount => _setupResult.InvocationAmount;
     public Action<dynamic[]>? Callback => _setupResult.GetCallback;

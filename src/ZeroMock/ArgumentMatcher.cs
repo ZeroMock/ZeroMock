@@ -11,6 +11,11 @@ internal class ArgumentMatcher
 
     public bool Match(object[] args)
     {
+        if (_matchers.Count == 0)
+        {
+            return true;
+        }
+
         if (args.Count() != _matchers.Count)
         {
             return false;
