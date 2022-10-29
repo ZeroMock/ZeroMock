@@ -8,8 +8,6 @@ namespace ZeroMock;
 /// </summary>
 public class Mock<T> where T : class
 {
-    private HashSet<MethodInfo> _setupProperties = new();
-
     public Mock()
     {
         if (!IsConcreteType(typeof(T)))
@@ -21,11 +19,23 @@ public class Mock<T> where T : class
     public void SetupAllProperties()
     {
         var methods = typeof(T).GetMethods(BingingFlagsHelper.InstanceAll | BindingFlags.DeclaredOnly);
-        foreach (var method in methods)
+        foreach (var setPropertyInfo in methods.Where(e => e.Name.StartsWith("set_")))
         {
-            _setupProperties.Add(method);
-        }
+            var getPropertyInfo = methods.FirstOrDefault(e => e.Name == setPropertyInfo.Name.Replace("set_", "get_"));
 
+            if (getPropertyInfo == null)
+            {
+                continue;
+            }
+
+            var setSetup = new SetupResult(new ArgumentMatcher(new List<Condition>()));
+            var getSetup = new SetupResult(new ArgumentMatcher(new List<Condition>()));
+
+            setSetup.Callback((dynamic arg) => getSetup.Returns(arg));
+
+            PatchedObjectTracker.AddSetup(Object, setPropertyInfo, new SetupResultAccessor(setSetup));
+            PatchedObjectTracker.AddSetup(Object, getPropertyInfo, new SetupResultAccessor(getSetup));
+        }
     }
 
     private static bool IsConcreteType(Type type)
