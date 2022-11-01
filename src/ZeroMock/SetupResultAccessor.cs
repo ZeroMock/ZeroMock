@@ -14,5 +14,7 @@ internal class SetupResultAccessor : ISetupResultAccessor
     public int InvocationAmount => _setupResult.InvocationAmount;
     public Action<dynamic[]>? Callback => _setupResult.GetCallback;
 
+    public Action? Throws => _setupResult.GetThrows;
+
     public bool Match(object[] args) => _setupResult.Match(args);
 }

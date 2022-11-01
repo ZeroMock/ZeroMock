@@ -7,6 +7,7 @@ public class SetupResult
     internal int InvocationAmount { get; private set; }
     internal Action<dynamic[]>? GetCallback { get; private set; }
     internal Func<dynamic[], dynamic>? GetReturn { get; private set; }
+    internal Action? GetThrows { get; private set; }
 
     internal SetupResult(ArgumentMatcher condition)
     {
@@ -32,7 +33,25 @@ public class SetupResult
         return this;
     }
 
-    public bool Match(object[] args)
+    public SetupResult Throws(Exception exception)
+    {
+        GetThrows = () => throw exception;
+        return this;
+    }
+
+    public SetupResult Throws(Func<Exception> exception)
+    {
+        GetThrows = () => throw exception();
+        return this;
+    }
+
+    public SetupResult Throws<TException>() where TException : Exception, new()
+    {
+        GetThrows = () => throw new TException();
+        return this;
+    }
+
+    internal bool Match(object[] args)
     {
         if (_condition.Match(args))
         {

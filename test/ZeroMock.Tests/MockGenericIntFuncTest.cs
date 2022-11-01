@@ -65,6 +65,39 @@ public class MockGenericIntFuncTest
     }
 
     [Test]
+    public void CanThrow()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.Target<int>()).Throws(new Exception());
+
+        // Assert
+        Assert.Throws<Exception>(() => obj.Target<int>());
+    }
+
+    [Test]
+    public void CanThrow1()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.Target<int>()).Throws<Exception>();
+
+        // Assert
+        Assert.Throws<Exception>(() => obj.Target<int>());
+    }
+
+    [Test]
+    public void CanThrow2()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.Target<int>()).Throws(() => new Exception());
+
+        // Assert
+        Assert.Throws<Exception>(() => obj.Target<int>());
+    }
+
+    [Test]
     public void CanReturnAndCallback()
     {
         // Arrange
