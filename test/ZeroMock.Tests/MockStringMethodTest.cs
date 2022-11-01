@@ -113,6 +113,39 @@ public class MockStringMethodTest
         Assert.Throws<VerificationException>(() => _sut.Verify(e => e.StringMethod(), Times.Never()));
     }
 
+    [Test]
+    public void CanThrow()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringMethod()).Throws(new Exception());
+
+        // Assert
+        Assert.Throws<Exception>(() => obj.StringMethod());
+    }
+
+    [Test]
+    public void CanThrow1()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringMethod()).Throws<Exception>();
+
+        // Assert
+        Assert.Throws<Exception>(() => obj.StringMethod());
+    }
+
+    [Test]
+    public void CanThrow2()
+    {
+        // Arrange
+        var obj = _sut.Object;
+        _sut.Setup(e => e.StringMethod()).Throws(() => new Exception());
+
+        // Assert
+        Assert.Throws<Exception>(() => obj.StringMethod());
+    }
+
     private class TestClass
     {
         public string StringMethod() => PreventInline.Throw<string>();
