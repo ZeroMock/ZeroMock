@@ -82,7 +82,7 @@ internal static class Patcher
         if (patchState == PatchState.Setup)
         {
             methodResults.Callback?.Invoke(__args);
-
+            methodResults.Throws?.Invoke();
             return Skip;
         }
 
@@ -115,6 +115,7 @@ internal static class Patcher
             }
 
             methodResults.Callback?.Invoke(__args);
+            methodResults.Throws?.Invoke();
 
             return Skip;
         }

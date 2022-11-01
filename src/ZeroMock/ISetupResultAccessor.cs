@@ -18,6 +18,11 @@ internal interface ISetupResultAccessor
     public Action<dynamic[]>? Callback { get; }
 
     /// <summary>
+    /// If the user setup throws
+    /// </summary>
+    public Action? Throws { get; }
+
+    /// <summary>
     /// If this setup arguments match the passed arguments
     /// </summary>
     /// <param name="args"></param>
