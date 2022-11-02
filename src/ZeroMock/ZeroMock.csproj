@@ -9,6 +9,8 @@
 		<Authors>Coenraad Stijne</Authors>
 		<PackageDescription>ZeroMock is a mocking framework for concrete classes</PackageDescription>
 		<RepositoryUrl>https://github.com/CoenraadS/ZeroMock</RepositoryUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -19,4 +21,7 @@
 		<PackageReference Include="Lib.Harmony" Version="2.2.2" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<None Include="$(SolutionDir)\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 </Project>
