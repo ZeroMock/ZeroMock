@@ -1,5 +1,7 @@
 # ZeroMock
 
+[![NuGet version (ZeroMock)](https://img.shields.io/nuget/v/ZeroMock.svg?style=flat-square)](https://www.nuget.org/packages/ZeroMock/)
+
 ZeroMock is a mocking framework to mock concrete types.
 
 It uses a syntax familier to `moq`
@@ -14,12 +16,19 @@ mock.Setup(e => e.Example(It.Is<string>(e => e.Contains("Hello"))))
 var obj = mock.Object;
 var result = obj.Example("Helloooo");
 
-mock.Verify(e => e.Example("Hello"), Times.Once()
+mock.Verify(e => e.Example("Hello"), Times.Once());
 ```
 
-This project is in pre-alpha stage, and probably very unstable.
-
 This project cannot mock interfaces, it is recommended to use in combination with `moq` to combine feature sets.
+
+The aim is to duplicate the most used APIs, adding more as requested.
+
+Currently supported `moq` definitions:
+
+- Setup
+- Throws
+- Callback
+- Returns
 
 ---
 
@@ -34,9 +43,9 @@ This project cannot mock interfaces, it is recommended to use in combination wit
 
 ### Comparison against other mock frameworks:
 
-| Name                                                        | Open Source | Interfaces | Concrete Types | Static | Production Ready |
-| ----------------------------------------------------------- | :---------: | :--------: | :------------: | :----: | :--------------: |
-| [Moq](https://github.com/moq/moq4)                          |      ✔️      |     ✔️      |       ❌        |   ❌    |        ✔️         |
-| [TypeMock](https://www.typemock.com/isolator-product-page/) |      ❌      |     ✔️      |       ✔️        |   ✔️    |        ✔️         |
-| [JustMock](https://www.telerik.com/products/mocking.aspx)   |      ❌      |     ✔️      |       ✔️        |   ✔️    |        ✔️         |
-| [ZeroMock](https://github.com/CoenraadS/ZeroMock)           |      ✔️      |     ❌      |       ✔️        |   ❌    |        ❌         |
+| Name                                                        | Open Source | Interfaces | Concrete Types | Static |
+| ----------------------------------------------------------- | :---------: | :--------: | :------------: | :----: |
+| [Moq](https://github.com/moq/moq4)                          |      ✔️      |     ✔️      |       ❌        |   ❌    |
+| [TypeMock](https://www.typemock.com/isolator-product-page/) |      ❌      |     ✔️      |       ✔️        |   ✔️    |
+| [JustMock](https://www.telerik.com/products/mocking.aspx)   |      ❌      |     ✔️      |       ✔️        |   ✔️    |
+| [ZeroMock](https://github.com/CoenraadS/ZeroMock)           |      ✔️      |     ❌      |       ✔️        |   ❌    |
