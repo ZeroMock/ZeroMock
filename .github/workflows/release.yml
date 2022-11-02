@@ -15,6 +15,6 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Create package
-      run: dotnet pack -c Release o ./bin
+      run: dotnet pack -c Release -o ./bin
     - name: Publish package
       run: dotnet nuget push "./bin/*.nupkg" -k ${{ secrets.NUGET }}
